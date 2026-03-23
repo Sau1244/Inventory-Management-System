@@ -3,6 +3,9 @@
 
 #include <algorithm>
 
+std::vector<std::shared_ptr<Item>>& Inventory::getStock() { return stock; }
+const std::vector<std::shared_ptr<Item>>& Inventory::getStock() const { return stock; }
+
 void Inventory::addItem(std::shared_ptr<Item> newItem) {
     stock.push_back(std::move(newItem));
 }
