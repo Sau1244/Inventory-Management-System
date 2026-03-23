@@ -28,3 +28,17 @@ void Item::setPrice(double newPrice) {
     if(newPrice < MIN_PRICE) throw std::invalid_argument("Price cannot be negative");
     price = newPrice;
 }
+
+/** Helpers **/
+void Item::displayItemInfo() const{
+    std::cout << "ID: " << itemID << " | Name: " << name
+              << " | Qty: " << quantity << " | Price: " << price;
+}
+
+std::optional<std::string> Item::findBaseAttribute(const std::string& key) const{
+    if(key == "itemID") return itemID;
+    if(key == "name") return name;
+    if(key == "quantity") return std::to_string(quantity);
+    if(key == "price") return std::to_string(price);
+    return std::nullopt;
+}

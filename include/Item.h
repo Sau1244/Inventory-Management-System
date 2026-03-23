@@ -39,6 +39,20 @@ public:
     void setQuantity(int newQuantity);
     void setPrice(double newPrice);
 
+    /** helpers **/
+
+    /**
+     * @brief Displays the current attribute values
+     */
+    void displayItemInfo() const;
+
+    /**
+     * @brief Finds the attribute by key in base item
+     * @param key Name of the attribute
+     * @return Attribute or nullopt if does not exist
+     */
+    std::optional<std::string> findBaseAttribute(const std::string& key) const;
+
     virtual ~Item() = default;
     virtual std::string category() const = 0;
     virtual void display() const = 0;
