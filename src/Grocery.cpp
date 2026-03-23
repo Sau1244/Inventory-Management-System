@@ -1,6 +1,6 @@
 #include "Grocery.h"
 
-Grocery::Grocery(std::string expirationDate, std::string itemID, std::string name, int quantity, int price)
+Grocery::Grocery(std::string expirationDate, std::string itemID, std::string name, int quantity, double price)
         : expirationDate(std::move(expirationDate)), Item(std::move(itemID), std::move(name), quantity, price) {}
 
 std::string Grocery::category() const { return "Grocery"; }

@@ -6,7 +6,7 @@ class Grocery : public Item{
 private:
     std::string expirationDate;
 public:
-    Grocery(std::string expirationDate, std::string itemID, std::string name, int quantity, int price);
+    Grocery(std::string expirationDate, std::string itemID, std::string name, int quantity, double price);
 
     std::string category() const override;
     void display() const override;
