@@ -1,7 +1,5 @@
 #include "Item.h"
 
-#include <utility>
-
 /** Constructor **/
 Item::Item(std::string itemID, std::string name, int quantity, double price)
         : itemID(std::move(itemID)), name(std::move(name)) {
