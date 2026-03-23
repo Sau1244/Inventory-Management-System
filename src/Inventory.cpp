@@ -9,7 +9,7 @@ void Inventory::addItem(std::shared_ptr<Item> newItem) {
 
 void Inventory::removeItem(const std::string &itemID) {
     auto item = std::remove_if(stock.begin(), stock.end(),
-                               [&itemID](auto& i){
+                               [&itemID](const auto& i){
                                     return i->getItemID() == itemID; });
 
     stock.erase(item, stock.end());
