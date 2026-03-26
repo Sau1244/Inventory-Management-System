@@ -1,5 +1,6 @@
 #include "Item.h"
 #include "Exceptions.h"
+#include <iomanip>
 
 /** Constructor **/
 Item::Item(std::string itemID, std::string name, int quantity, double price)
@@ -30,8 +31,10 @@ void Item::setPrice(double newPrice) {
 
 /** Helpers **/
 void Item::displayItemInfo() const{
-    std::cout << "ID: " << itemID << " | Name: " << name
-              << " | Qty: " << quantity << " | Price: " << price;
+    std::cout << std::setw(3) << "ID: " << itemID
+              << std::setw(20) << (" | Name: " + name)
+              << " | Qty: " << std::right << std::setw(4) << quantity
+              << " | Price: " << std::right << std::setw(8) << price;
 }
 
 std::optional<std::string> Item::findBaseAttribute(const std::string& key) const{
