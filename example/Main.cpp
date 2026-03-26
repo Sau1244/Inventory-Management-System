@@ -7,7 +7,7 @@ int main(){
     Inventory s2;
     try {
         Inventory s;
-        s.readFromFile(std::string(PROJECTPATH) + "/data/Inventory.csv");
+        s.readFromFile(std::string(PROJECTPATH) + "/data/inventory.csv");
         std::cout << "File loaded.\n";
         std::cout << "------ Inventory ------\n";
         s.displayInventory();
@@ -47,7 +47,7 @@ int main(){
 
     try{
         std::cout << "\n> Add Item: E1 (already exists)";
-        s2.addItem(Factory::makeElectronics("E1", "temp", 16, 32.64, 128));
+        s2.addItem(Factory::makeElectronics("E1", "temp", 16, 32.64, 12));
     }catch(const InventoryException& e){
         std::cout << "\nError: " << e.what() << "\n";
     }
