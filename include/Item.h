@@ -9,14 +9,16 @@
  * with base attributes of id, name, quantity and price
  */
 class Item{
+public:
+    static constexpr int MIN_QUANTITY = 0;
+    static constexpr int MAX_QUANTITY = 10000;
+    static constexpr double MIN_PRICE = 0.0;
+    static constexpr double MAX_PRICE = 10000.0;
 private:
     std::string itemID;
     std::string name;
     int quantity;
     double price;
-
-    static constexpr int MIN_QUANTITY = 0;
-    static constexpr double MIN_PRICE = 0.0;
 public:
     /**
      * @brief Parameterized Constructor to initialize an object

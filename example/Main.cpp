@@ -19,12 +19,9 @@ int main(){
         s2.displayInventory();
 
         /** Demonstrating filterItems and sorting **/
-        auto filtered = Utils::filterItems(s2, [](const auto& item){ return item->getQuantity() < 36; });
-        std::cout << "------ Filtered by items with quantity below 36 ------\n";
-        for(const auto& item : filtered)
-            item->display();
+        s2.findBelowQuantityThreshold(36);
 
-        Utils::sortItems(s2, [](const auto& a, const auto& b){ return a->getPrice() < b->getPrice(); });
+        s2.sortByPrice(true);
         std::cout << "------ Sorted by price ------\n";
         s2.displayInventory();
 

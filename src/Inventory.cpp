@@ -2,6 +2,7 @@
 #include "Item.h"
 #include "Exceptions.h"
 #include "Factory.h"
+#include "Utils.h"
 
 #include <algorithm>
 #include <sstream>
@@ -18,7 +19,10 @@ void Inventory::readFromFile(const std::string& filename){
     std::ifstream file(filename);
 
     if(!file.is_open())
-        throw InventoryException("Unable to open " + filename);
+        throw InventoryException("Unable to open '" + filename + "'");
+
+    if(!Inventory::hasCSV(filename))
+        throw InventoryException("File should be ended with '.csv'");
 
     std::string line;
 
@@ -28,6 +32,8 @@ void Inventory::readFromFile(const std::string& filename){
             addItemFromFile(columns);
         }catch(const InventoryException& e) {
             std::cout << "\n[Error] " << e.what() << "\n";
+        }catch(const std::exception&){
+            std::cout << "\n[Error]: Invalid number format.\n";
         }
     }
 
@@ -43,6 +49,9 @@ void Inventory::writeToFile(const std::string& filename) const{
     if(!file.is_open())
         throw InventoryException("Unable to create " + filename);
 
+    if(!Inventory::hasCSV(filename))
+        throw InventoryException("File should be ended with '.csv'");
+
     for(const auto& i : stock){
         auto category = i->category();
 
@@ -54,6 +63,11 @@ void Inventory::writeToFile(const std::string& filename) const{
             << i->getName() << ',' << i->getQuantity() << ',' << i->getPrice() << ','
             << extra.value() << "\n";
     }
+}
+
+bool Inventory::isItemIDExists(const std::string& id) const{
+    return std::any_of(stock.begin(), stock.end(),
+                               [&id](const auto& i){ return i->getItemID() == id; });
 }
 
 void Inventory::addItem(std::shared_ptr<Item> newItem) {
@@ -111,18 +125,48 @@ void Inventory::addItemFromFile(const std::vector<std::string>& columns){
     const std::string& category = columns[1];
     const std::string& name = columns[2];
 
-    try {
-        int quantity = std::stoi(columns[3]);
-        double price = std::stod(columns[4]);
+    int quantity = std::stoi(columns[3]);
+    double price = std::stod(columns[4]);
 
-        if(category == "Electronics")
-            addItem(Factory::makeElectronics(itemID, name, quantity, price, std::stoi(columns[5])));
-        else if(category == "Grocery")
-            addItem(Factory::makeGrocery(itemID, name, quantity, price, columns[5]));
-        else
-            throw InventoryException("Category " + category + " does not exist.");
+    Inventory::validateItemAttributes(itemID, name, quantity, price);
+    const auto& extras = columns[5];
+    if (category == "Electronics")
+        addItem(Factory::makeElectronics(itemID, name, quantity, price, std::stoi(extras)));
+    else if (category == "Grocery")
+        addItem(Factory::makeGrocery(itemID, name, quantity, price, extras));
+    else
+        throw InventoryException("Category " + category + " does not exist.");
+}
 
-    }catch(const std::exception&){
-        throw InventoryException("Invalid number format.");
-    }
+void Inventory::validateItemAttributes(const std::string& itemID, const std::string& name, int quantity, double price){
+    if(itemID.empty()) throw InvalidValueException("ID cannot be empty");
+    if(name.empty()) throw InvalidValueException("Name cannot be empty");
+    if(price < Item::MIN_PRICE) throw InvalidValueException("Price cannot be negative");
+    if(price > Item::MAX_PRICE) throw InvalidValueException("Price cannot be above " + std::to_string(Item::MAX_PRICE));
+    if(quantity < Item::MIN_QUANTITY) throw InvalidValueException("Quantity cannot be negative");
+    if(quantity > Item::MAX_QUANTITY) throw InvalidValueException("Quantity cannot be above " + std::to_string(Item::MAX_QUANTITY));
+}
+
+bool Inventory::hasCSV(const std::string& filename){
+    return filename.size() >= 4 && (filename.substr(filename.size() - 4) == ".csv");
+}
+
+std::shared_ptr<Item> Inventory::findMostExpensive() const{
+    if(stock.empty()) throw InventoryException("Stock is empty.");
+
+    return *std::max_element(stock.begin(), stock.end(),
+                               [](const auto& a, const auto& b)
+                                                { return a->getPrice() < b->getPrice(); });
+
+}
+
+void Inventory::findBelowQuantityThreshold(int threshold) const{
+    auto filtered = Utils::filterItems(*this, [&threshold](const auto& item){ return item->getQuantity() < threshold; });
+    std::cout << "------ Filtered by items with quantity below " << threshold << " ------\n";
+    for(const auto& item : filtered)
+        item->display();
+}
+
+void Inventory::sortByPrice(bool isAscending){
+    Utils::sortItems(*this, [&isAscending](const auto& a, const auto& b){ return isAscending ? a->getPrice() < b->getPrice() : a->getPrice() > b->getPrice(); });
 }

@@ -10,3 +10,4 @@ set(INCLUDES ${PROJECT_SOURCE_DIR}/include)
 include_directories(${INCLUDES})
 
 add_subdirectory(example)
+add_subdirectory(cli)

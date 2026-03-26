@@ -23,3 +23,8 @@ class InvalidValueException : public InventoryException{
 public:
     explicit InvalidValueException(const std::string& msg) : InventoryException(msg) {}
 };
+
+class OperationCancelled : public std::runtime_error{
+public:
+    explicit OperationCancelled() : std::runtime_error("Operation Cancelled.") {}
+};

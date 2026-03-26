@@ -25,6 +25,12 @@ public:
     void readFromFile(const std::string& filename);
     void writeToFile(const std::string& filename) const;
 
+    bool isItemIDExists(const std::string& id) const;
+    void sortByPrice(bool isAscending);
+
+    std::shared_ptr<Item> findMostExpensive() const;
+    void findBelowQuantityThreshold(int threshold) const;
+
     void addItem(std::shared_ptr<Item> newItem);
     void removeItem(const std::string& itemID);
     void updateQuantity(const std::string& itemID, int quantity);
@@ -32,4 +38,6 @@ public:
 private:
     static std::vector<std::string> splitString(const std::string& line);
     void addItemFromFile(const std::vector<std::string>& columns);
+    static void validateItemAttributes(const std::string& itemID, const std::string& name, int quantity, double price);
+    static bool hasCSV(const std::string& filename);
 };
